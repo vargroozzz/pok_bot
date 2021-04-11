@@ -6,7 +6,7 @@ import { watchFile } from "fs";
 import * as fs from "fs/promises";
 import {maintenancesPrinter} from "../kafka/maintenances";
 import {elem, findFirst, map, takeLeft} from "fp-ts/lib/Array";
-import {createAuthCode, grantToken} from "../kafka/trading";
+import {createAuthCode, grantToken} from "../amqp/trading";
 import {messageObservable, publish} from "../amqp/index";
 
 const token = process.env.BOT_TOKEN ?? "762533086:AAHfI2Ffdp4DGQwkKE90GjbaY3nO2spRaMs"
