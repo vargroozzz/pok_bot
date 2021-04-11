@@ -70,3 +70,11 @@ export type Store = {
     guildDiscount?: number,
     castleDiscount?: number,
 }
+
+export type Maintenance = {
+    link: string,
+    ownerCastle: Castle,
+    mana: number,
+    maintenanceCost: number, // gold per 100 mana spent
+    castleDiscount: number,
+}
