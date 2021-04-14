@@ -8,11 +8,12 @@ import {maintenancesPrinter} from "../kafka/maintenances";
 import {elem, findFirst, map, takeLeft} from "fp-ts/lib/Array";
 import {createAuthCode, grantToken} from "../amqp/trading";
 import {messageObservable, publish} from "../amqp/index";
+import * as O from "fp-ts/lib/Option";
+import {User} from "../db/types";
+import {addUser, getUsers, isRegistered, readMaintenances, setToken} from "../db/utils";
 
 const token = process.env.BOT_TOKEN ?? "762533086:AAHfI2Ffdp4DGQwkKE90GjbaY3nO2spRaMs"
-const usersFilePath = "./users.json"
-const maintenancesFilePath = "./maintenances.json"
-const offersFilePath = "./offers.json"
+
 
 const isResultOk = flow(
     JSON.parse,
@@ -86,78 +87,6 @@ bot.command('auth', (ctx) => ctx.scene.enter('auth'))
 // bot.command('echo', (ctx) => ctx.scene.enter('echo'))
 const start_btns = Markup.keyboard(["Я", "В разработке..."]).resize()
 
-type User = {
-    id: number,
-    token: string | null,
-    gold: number,
-    rights: {
-        basic: boolean,
-        profile: boolean,
-        gear: boolean,
-        stock: boolean,
-        trade: boolean,
-        guild: boolean,
-    },
-    offersList: [string, string][]
-}
-
-const createUser = (id: number):User => ({
-    id: id,
-    token: null,
-    gold: 0,
-    rights: {
-        basic: false,
-        profile: false,
-        gear: false,
-        stock: false,
-        trade: false,
-        guild: false,
-    },
-    offersList: []
-})
-
-const readUsers = () => fs.readFile(usersFilePath, "utf-8")
-const readMaintenances = () => fs.readFile(maintenancesFilePath, "utf-8")
-const readOffers = () => fs.readFile(offersFilePath, "utf-8")
-// const addUser = (id: number) =>
-//     fs.writeFileSync(usersFilePath, JSON.stringify([...JSON.parse(readUsers()), createUser(id)]))
-const addUser = async (id: number) => {
-    const users = await readUsers()
-    return pipe(
-        id,
-        createUser,
-        user => [...JSON.parse(users), user],
-        JSON.stringify,
-        data => fs.writeFile(usersFilePath, data)
-    )
-}
-
-const setToken = async (id: number, token: string) => {
-    const users = await readUsers()
-    return pipe(
-        users,
-        JSON.parse,
-        map((user: User) => user.id === id ? {...user, token: token, rights: {...user.rights, basic: true, profile: true, trade: true}} : user),
-        JSON.stringify,
-        data => fs.writeFile(usersFilePath, data)
-    )
-}
-
-    // fs.writeFileSync(usersFilePath, JSON.stringify([...JSON.parse(readUsers()), createUser(id)]))
-
-// const isRegistered = (id: number) => elem(N.Eq)(id)(map((user: User) => user.id)(JSON.parse(readUsers())))
-const isRegistered = async (id: number) => {
-    const users = await readUsers()
-    return pipe(
-        users,
-        JSON.parse,
-        map((user: User) => user.id),
-        elem(N.Eq)(id)
-    )
-}
-
-watchFile(offersFilePath, () => readOffers().then((offer) => console.log(offer)))
-
 bot.start(async ctx => {
     if (await isRegistered(ctx.from.id)) return ctx.reply("Привет!")
     else {
@@ -178,14 +107,15 @@ bot.command('repair', async (ctx) => {
     )
 })
 bot.command('list', async (ctx) => {
-    const users = await readUsers()
+    const users = await getUsers()
     return pipe(
         users,
-        JSON.parse,
-        takeLeft(20),
-        maintenancesPrinter,
+        findFirst((user: User) => user.id === ctx.from.id),
         // console.log,
-        text => ctx.reply(text)
+        O.match(
+            () => 'a none',
+            (a) => `a some containing ${a}`
+        )
     )
 })
 
