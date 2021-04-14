@@ -70,9 +70,6 @@ export const getOffersList = async (id: number): Promise<O.Option<[string, strin
 export const setOffersList = (id: number, offersList: [string, string][]) =>
     updateUsers(mapUser(user => ({...user, offersList}), id))
 
-
-// export const addUser = (id: number) =>
-//     fs.writeFileSync(usersFilePath, JSON.stringify([...JSON.parse(readUsers()), createUser(id)]))
 export const addUser = flow(
     createUser,
     user => updateUsers(users => [...users, user]),
@@ -82,9 +79,6 @@ export const addUser = flow(
 export const setToken = async (id: number, token: string) =>
     updateUserById(user => ({...user, token: token, rights: {...user.rights, basic: true, profile: true, trade: true}}), id)
 
-// fs.writeFileSync(usersFilePath, JSON.stringify([...JSON.parse(readUsers()), createUser(id)]))
-
-// export const isRegistered = (id: number) => elem(N.Eq)(id)(map((user: User) => user.id)(JSON.parse(readUsers())))
 export const isRegistered = async (id: number) => {
     const users = await getUsers()
     return pipe(
