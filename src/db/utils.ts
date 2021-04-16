@@ -67,8 +67,8 @@ export const getOffersList = async (id: number): Promise<O.Option<[string, strin
     )
 }
 
-export const setOffersList = (id: number, offersList: [string, string][]) =>
-    updateUsers(mapUser(user => ({...user, offersList}), id))
+export const setOffersList = (id: number, offersList: readonly [string, string][]) =>
+    updateUsers(mapUser(user => ({...user, offersList: [...offersList]}), id))
 
 export const addUser = flow(
     createUser,
@@ -78,6 +78,24 @@ export const addUser = flow(
 
 export const setToken = async (id: number, token: string) =>
     updateUserById(user => ({...user, token: token, rights: {...user.rights, basic: true, profile: true, trade: true}}), id)
+export const getToken = async (id: number) => {
+    const maybeUser = await selectUserById(id)
+    return pipe(
+        maybeUser,
+        O.map(user => O.fromNullable(user.token)),
+        O.flatten
+    )
+}
+
+export const requestProfileUpdate = (id: number) =>
+    getToken(id).then(O.match(
+    () => false,
+    flow(
+        requestProfile,
+        JSON.stringify,
+        publish
+    )
+))
 
 export const isRegistered = async (id: number) => {
     const users = await getUsers()
@@ -88,5 +106,5 @@ export const isRegistered = async (id: number) => {
     )
 }
 
-watchFile(offersFilePath, () => readOffers().then((offer) => console.log(offer)))
+
 
