@@ -17,16 +17,6 @@ const publisherChannel = await connection.createChannel()
 
 export const publish = (data: string) => publisherChannel.publish(directExchange, routingKey, Buffer.from(data))
 
-// publisherChannel.publish(directExchange, routingKey, Buffer.from('something to do'))
-
-// Publisher
-// connection
-//     .then((conn) => conn.createChannel())
-//     .then((ch) => ch.assertQueue(directExchange)
-//         .then((ok) => ch.publish(directExchange, routingKey, Buffer.from('something to do')))
-//     )
-//     // .catch(console.warn)
-
 // Consumer
 const messageEmitter = new EventEmitter()
 export const messageObservable = fromEvent(messageEmitter, 'message')
@@ -41,40 +31,3 @@ export const runAMQPConsumer = () => consumerChannel.consume(inboundQueue,
         consumerChannel.ack(msg)
     }
 })
-
-// await consumerChannel.assertQueue(inboundQueue)
-//     .then((ok) => consumerChannel
-//         .consume(inboundQueue, (msg) => {
-//             if (msg !== null) {
-//                 messageEmitter.emit("message", msg.content.toString())
-//                 consumerChannel.ack(msg)
-//             }
-//         })
-//     )
-        // .then((conn) => conn.createChannel())
-        // .then((ch) => ch.assertQueue(directExchange)
-        //     .then((ok) => ch.consume(directExchange, (msg) => {
-        //             if (msg !== null) {
-        //                 console.log(msg.content.toString())
-        //                 ch.ack(msg)
-        //             }
-        //         })
-        //     )
-        // ).catch(console.warn)
-
-
-// const consumer = new Observable(subscriber => {
-//     const consumerChannel = await connection.createChannel()
-//
-//     // connection
-//     //     .then((conn) => conn.createChannel())
-//     //     .then((ch) => ch.assertQueue(directExchange)
-//     //         .then((ok) => ch.consume(directExchange, (msg) => {
-//     //                 if (msg !== null) {
-//     //                     console.log(msg.content.toString())
-//     //                     ch.ack(msg)
-//     //                 }
-//     //             })
-//     //         )
-//     //     ).catch(console.warn)
-// })
