@@ -1,11 +1,11 @@
 import {Telegraf, Scenes, session} from "telegraf"
-import {flow, pipe} from "fp-ts/lib/function";
-import {maintenancesPrinter} from "../kafka/maintenances";
-import {findFirst, foldMap, takeLeft} from "fp-ts/lib/Array";
-import {createAuthCode, grantToken, requestProfile, wantToBuy} from "../amqp/trading";
-import {messageObservable, publish} from "../amqp/index";
-import * as O from "fp-ts/lib/Option";
-import {User} from "../db/types";
+import {flow, pipe} from "fp-ts/lib/function"
+import {maintenancesPrinter} from "../kafka/maintenances"
+import {findFirst, foldMap, takeLeft} from "fp-ts/lib/Array"
+import {createAuthCode, grantToken, requestProfile, wantToBuy} from "../amqp/trading"
+import {messageObservable, publish} from "../amqp/index"
+import * as O from "fp-ts/lib/Option"
+import {User} from "../db/types"
 import {
     addUser,
     getToken,
@@ -15,10 +15,10 @@ import {
     setOffersList,
     setToken,
     updateUserById
-} from "../db/utils";
-import * as S from "fp-ts/lib/string";
-import {offerObservable} from "../kafka";
-import {Subscription} from "rxjs";
+} from "../db/utils"
+import * as S from "fp-ts/lib/string"
+import {offerObservable} from "../kafka"
+import {Subscription} from "rxjs"
 
 const token = process.env.BOT_TOKEN
 if (token === undefined) throw new Error("Telegram Bot token is required")
@@ -46,7 +46,7 @@ messageObservable.subscribe(data => {
                     break
                 case "requestProfile":
                     updateUserById(user => ({...user, gold: dataJSON.payload.profile.gold}))(dataJSON.payload.userId)
-                    break;
+                    break
                 default:
                     console.log(data)
             }

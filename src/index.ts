@@ -1,6 +1,6 @@
 import runKafka from "./kafka/index.js"
-import bot from "./bot";
-import {runAMQPConsumer} from "./amqp";
+import bot from "./bot"
+import {runAMQPConsumer} from "./amqp"
 
 const TOKEN = process.env.BOT_TOKEN
 const HOST_URL = process.env.HOST_URL
@@ -16,4 +16,4 @@ bot.launch({
         // tlsOptions: null,
         hookPath: `/bot${TOKEN}`
     }
-});
+})

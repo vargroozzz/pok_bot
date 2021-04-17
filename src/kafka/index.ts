@@ -1,10 +1,10 @@
 import { Kafka } from 'kafkajs'
-import {sortByPriceByMana, storesToMaintenances} from "./maintenances";
-import { pipe } from "fp-ts/lib/function";
-import * as fs from "fs";
-import {writeOfferJSON} from "./offers";
-import EventEmitter from "events";
-import {fromEvent} from "rxjs";
+import {sortByPriceByMana, storesToMaintenances} from "./maintenances"
+import { pipe } from "fp-ts/lib/function"
+import * as fs from "fs"
+import {writeOfferJSON} from "./offers"
+import EventEmitter from "events"
+import {fromEvent} from "rxjs"
 
 const maintenancesFilePath = "./maintenances.json"
 const offersFilePath = "./offers.json"
@@ -44,7 +44,7 @@ const runKafka = async () => {
                         //     JSON.stringify,
                         //     data => fs.writeFileSync(offersFilePath, data),
                         // )
-                        break;
+                        break
                     case 'cw3-yellow_pages':
                         const stores = JSON.parse(message.value?.toString() ?? "")
                         pipe(
@@ -54,7 +54,7 @@ const runKafka = async () => {
                             JSON.stringify,
                             data => fs.writeFileSync(maintenancesFilePath, data),
                         )
-                        break;
+                        break
                 }
                 },
     })

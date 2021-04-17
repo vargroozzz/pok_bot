@@ -1,10 +1,10 @@
-import {flow, pipe} from "fp-ts/lib/function";
-import * as N from "fp-ts/lib/number";
+import {flow, pipe} from "fp-ts/lib/function"
+import * as N from "fp-ts/lib/number"
 import * as S from "fp-ts/lib/string"
-import {contramap, reverse} from "fp-ts/lib/Ord";
-import {filter, filterMap, foldMap, map, sortBy} from "fp-ts/lib/Array";
-import {Castle, Maintenance, Store} from "./types";
-import * as O from "fp-ts/lib/Option";
+import {contramap, reverse} from "fp-ts/lib/Ord"
+import {filter, filterMap, foldMap, map, sortBy} from "fp-ts/lib/Array"
+import {Castle, Maintenance, Store} from "./types"
+import * as O from "fp-ts/lib/Option"
 
 const getPriceMultiplier = <A extends {ownerCastle: Castle, castleDiscount?: number}>(store: A) =>
     store.ownerCastle === "🍆" ?

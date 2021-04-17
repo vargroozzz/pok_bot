@@ -1,6 +1,6 @@
 import amqp from 'amqplib'
-import {fromEvent, Observable} from "rxjs";
-import EventEmitter from "events";
+import {fromEvent, Observable} from "rxjs"
+import EventEmitter from "events"
 
 const appName = "ibogdan_cwutils"
 const apiToken = process.env.CWAPI_TOKEN
@@ -25,7 +25,7 @@ export const publish = (data: string) => publisherChannel.publish(directExchange
 //     .then((ch) => ch.assertQueue(directExchange)
 //         .then((ok) => ch.publish(directExchange, routingKey, Buffer.from('something to do')))
 //     )
-//     // .catch(console.warn);
+//     // .catch(console.warn)
 
 // Consumer
 const messageEmitter = new EventEmitter()
@@ -60,7 +60,7 @@ export const runAMQPConsumer = () => consumerChannel.consume(inboundQueue,
         //             }
         //         })
         //     )
-        // ).catch(console.warn);
+        // ).catch(console.warn)
 
 
 // const consumer = new Observable(subscriber => {
@@ -76,5 +76,5 @@ export const runAMQPConsumer = () => consumerChannel.consume(inboundQueue,
 //     //                 }
 //     //             })
 //     //         )
-//     //     ).catch(console.warn);
+//     //     ).catch(console.warn)
 // })
