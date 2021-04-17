@@ -65,17 +65,7 @@ authCW.hears(/(\d+)/, (ctx) => {
 
     return ctx.replyWithMarkdown('Send `hi`')
 })
-authCW.on('message', (ctx) => ctx.replyWithMarkdown('Send `hi`'))
-
-// Echo scene
-// const echoScene = new Scenes.BaseScene<Scenes.SceneContext>('echo')
-// echoScene.enter((ctx) => ctx.reply('echo scene'))
-// echoScene.leave((ctx) => ctx.reply('exiting echo scene'))
-// echoScene.command('back', leave<Scenes.SceneContext>())
-// echoScene.on('text', (ctx) => ctx.reply(ctx.message.text))
-// echoScene.on('message', (ctx) => ctx.reply('Only text messages please'))
-
-const bot = new Telegraf<Scenes.SceneContext>(token)
+// authCW.on('message', (ctx) => ctx.replyWithMarkdown('Send `hi`'))
 
 const stage = new Scenes.Stage<Scenes.SceneContext>([authCW, ], {
     ttl: 10,
