@@ -73,7 +73,7 @@ authCW.hears(/(\d+)/, (ctx) => {
         leave<Scenes.SceneContext>()(ctx)
     })
 
-    return ctx.replyWithMarkdown('Send `hi`')
+    return ctx.reply('Процесс аутентификации начат...')
 })
 // authCW.on('message', (ctx) => ctx.replyWithMarkdown('Send `hi`'))
 
