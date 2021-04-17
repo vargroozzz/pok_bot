@@ -7,7 +7,9 @@
   "scripts": {
     "watch": "tsc -w",
     "start": "node --experimental-specifier-resolution=node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku_release": "heroku container:release web",
+    "tsc": "./node_modules/typescript/bin/tsc"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +17,7 @@
   "devDependencies": {
     "@types/amqplib": "^0.5.17",
     "@types/node": "^14.14.37",
+    "@types/pg": "^7.14.11",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
     "eslint": "^7.23.0",
@@ -25,6 +28,7 @@
     "fp-ts": "^2.10.0-rc.8",
     "kafkajs": "^1.15.0",
     "monocle-ts": "^2.3.9",
+    "pg": "^8.6.0",
     "rxjs": "^6.6.7",
     "telegraf": "^4.3.0"
   }
