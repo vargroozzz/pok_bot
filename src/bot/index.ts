@@ -34,6 +34,7 @@ messageObservable.subscribe(data => {
         } else console.log(data)
     } else console.log(data)
 })
+const bot = new Telegraf<Scenes.SceneContext>(token)
 // Handler factories
 const { enter, leave } = Scenes.Stage
 
