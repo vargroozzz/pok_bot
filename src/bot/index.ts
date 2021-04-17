@@ -57,7 +57,7 @@ authCW.hears(/(\d+)/, (ctx) => {
         publish,
     )
     const subscription = messageObservable.subscribe(data => {
-        if (typeof data === "string" && isResultOk(data)) ctx.reply('Регисттрация успешна!')
+        if (typeof data === "string" && isResultOk(data)) ctx.reply('Регистрация успешна!')
         else ctx.reply('Произошла ошибка регистрации')
             subscription.unsubscribe()
             leave<Scenes.SceneContext>()(ctx)
