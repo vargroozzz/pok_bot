@@ -1,4 +1,4 @@
-export type User = {
+export type User = Readonly<{
     id: number,
     token: string | null,
     gold: number,
@@ -11,4 +11,4 @@ export type User = {
         guild: boolean,
     },
     offersList: [string, string][]
-}
+}>
