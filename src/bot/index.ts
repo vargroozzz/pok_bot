@@ -20,7 +20,8 @@ import * as S from "fp-ts/lib/string";
 import {offerObservable} from "../kafka";
 import {Subscription} from "rxjs";
 
-const token = process.env.BOT_TOKEN ?? "762533086:AAHfI2Ffdp4DGQwkKE90GjbaY3nO2spRaMs"
+const token = process.env.BOT_TOKEN
+if (token === undefined) throw new Error("Telegram Bot token is required")
 
 
 const isResultOk = flow(
