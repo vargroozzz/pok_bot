@@ -59,7 +59,7 @@ authCW.enter((ctx) => {
     )
     return ctx.reply('Напиши код, который тебе отправил чвбот')
 })
-authCW.leave((ctx) => ctx.reply('Процесс аутентификации закончен, но возможно что-то пошло не так'))
+// authCW.leave((ctx) => ctx.reply('Процесс аутентификации закончен, но возможно что-то пошло не так'))
 authCW.hears(/(\d+)/, (ctx) => {
     pipe(
         grantToken(ctx.from.id, ctx.match[1] ?? ""),
