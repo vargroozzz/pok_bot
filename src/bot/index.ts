@@ -81,11 +81,8 @@ const stage = new Scenes.Stage<Scenes.SceneContext>([authCW, ], {
     ttl: 10,
 })
 
-bot.use(session()); // to  be precise, session is not a must have for Scenes to work, but it sure is lonely without one
-bot.use(stage.middleware());
-bot.command('auth', (ctx) => ctx.scene.enter('auth'))
-// bot.command('echo', (ctx) => ctx.scene.enter('echo'))
-const start_btns = Markup.keyboard(["Я", "В разработке..."]).resize()
+bot.use(session()) // to  be precise, session is not a must have for Scenes to work, but it sure is lonely without one
+bot.use(stage.middleware())
 
 bot.start(async ctx => {
     if (await isRegistered(ctx.from.id)) return ctx.reply("Привет!")
@@ -94,6 +91,8 @@ bot.start(async ctx => {
         return ctx.reply("Новый пользователь зарегистрирован!")
     }
 })
+
+bot.command('auth', (ctx) => ctx.scene.enter('auth'))
 
 bot.command('repair', async (ctx) => {
     const maintenances = await readMaintenances()
