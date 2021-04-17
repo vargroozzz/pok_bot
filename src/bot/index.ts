@@ -1,16 +1,24 @@
-import {Telegraf, Markup, Scenes, session} from "Telegraf"
+import {Telegraf, Scenes, session} from "telegraf"
 import {flow, pipe} from "fp-ts/lib/function";
-import * as N from "fp-ts/lib/number";
-import * as Eq from "fp-ts/lib/Eq";
-import { watchFile } from "fs";
-import * as fs from "fs/promises";
 import {maintenancesPrinter} from "../kafka/maintenances";
-import {elem, findFirst, map, takeLeft} from "fp-ts/lib/Array";
-import {createAuthCode, grantToken} from "../amqp/trading";
+import {findFirst, foldMap, takeLeft} from "fp-ts/lib/Array";
+import {createAuthCode, grantToken, requestProfile, wantToBuy} from "../amqp/trading";
 import {messageObservable, publish} from "../amqp/index";
 import * as O from "fp-ts/lib/Option";
 import {User} from "../db/types";
-import {addUser, getUsers, isRegistered, readMaintenances, setToken} from "../db/utils";
+import {
+    addUser,
+    getToken,
+    getUsers,
+    isRegistered,
+    readMaintenances, requestProfileUpdate,
+    setOffersList,
+    setToken,
+    updateUserById
+} from "../db/utils";
+import * as S from "fp-ts/lib/string";
+import {offerObservable} from "../kafka";
+import {Subscription} from "rxjs";
 
 const token = process.env.BOT_TOKEN ?? "762533086:AAHfI2Ffdp4DGQwkKE90GjbaY3nO2spRaMs"
 
