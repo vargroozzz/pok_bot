@@ -27,6 +27,13 @@ if (token === undefined) throw new Error("Telegram Bot token is required")
 
 const buyers = new Map<number, Subscription>()
 
+
+// returns true if users existed, false otherwise
+const unsubscribe = (id: number) => {
+    buyers.get(id)?.unsubscribe()
+    return buyers.delete(id)
+}
+
 const isResultOk = flow(
     JSON.parse,
     data => data.result === "Ok"
@@ -122,16 +129,6 @@ bot.hears(/\/list\n([\s\S]+)/, async (ctx) => {
         const res: [O.Option<string>, O.Option<string>] = [O.fromNullable(matches[1]), O.fromNullable(matches[2])]
         return sequenceTuple(res)
     }
-    const users = await getUsers()
-    // const matches = O.fromNullable(ctx.match[1]?.split('\n').map(line => line.split(' ')))
-    // const matches = O.flatten(O.sequenceArray(O.map((match: string) => map(matchLine)(match.split('\n')))(maybeMatches)))
-    // const matches = O.flatten((O.map((match: string) => O.traverseArray(matchLine)(match.split('\n')))(maybeMatches)))
-    // const matches = pipe(
-    //     ctx.match[1],
-    //     O.fromNullable,
-    //     O.map((match: string) => O.traverseArray(matchLine)(match.split('\n'))),
-    //     O.flatten,
-    // )
     return pipe(
         ctx.match[1],
         O.fromNullable,
@@ -191,14 +188,6 @@ bot.command('trade_start', async (ctx) => {
                     })
                     buyers.set(user.id, buyer)
                     requestProfileUpdate(user.id)
-                    // messageObservable.subscribe(data => {
-                    //     if (typeof data === "string") {
-                    //         const dataJSON = JSON.parse(data)
-                    //         if (isResultOk(data) && dataJSON.action === "wantToBuy" && dataJSON.userId === ctx.from.id){
-                    //             ctx.reply(`Куплено ${dataJSON.payload.itemName} x ${dataJSON.payload.quantity} по ${price} = ${}`)
-                    //         } else console.log(data)
-                    //     } else console.log(data)
-                    // })
                     return "Торговля включена!"
                 }
             }
@@ -217,19 +206,7 @@ bot.command('trade_stop', async (ctx) => {
             () => "Я тебя не знаю",
             (user) => {
                 if(user.token === null || user.rights.trade === false) return "Ты не авторизован, чтобы начать процесс авторизации - введи /auth"
-                else {
-                    buyers.get(user.id)?.unsubscribe()
-                    buyers.delete(user.id)
-                    // messageObservable.subscribe(data => {
-                    //     if (typeof data === "string") {
-                    //         const dataJSON = JSON.parse(data)
-                    //         if (isResultOk(data) && dataJSON.action === "wantToBuy" && dataJSON.userId === ctx.from.id){
-                    //             ctx.reply(`Куплено ${dataJSON.payload.itemName} x ${dataJSON.payload.quantity} по ${price} = ${}`)
-                    //         } else console.log(data)
-                    //     } else console.log(data)
-                    // })
-                    return "Торговля выключена!"
-                }
+                else return unsubscribe(user.id) ? "Торговля выключена!" : "Торговля и не была включена"
             }
         ),
         text => ctx.reply(text)
