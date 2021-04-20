@@ -161,7 +161,7 @@ bot.command('list', async (ctx) => {
                 offers => "`" + offers + "`"
             )
         ),
-        text => ctx.replyWithMarkdown(text === "" ? "Твой список ресурсов пуст" : text)
+        text => ctx.replyWithMarkdown(text === "``" ? "Твой список ресурсов пуст" : text)
     )
 })
 
