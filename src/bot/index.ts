@@ -226,6 +226,8 @@ bot.command('trade_stop', async (ctx) => {
     )
 })
 
+bot.command('active_traders', async (ctx) => ctx.reply(Array.from(buyers.keys()).join('\n')))
+
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'))
 process.once('SIGTERM', () => bot.stop('SIGTERM'))
