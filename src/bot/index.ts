@@ -65,15 +65,22 @@ const { enter, leave } = Scenes.Stage
 
 // auth scene
 const authCW = new Scenes.BaseScene<Scenes.SceneContext>('auth')
-authCW.enter((ctx) => {
-    if (ctx.from === undefined) return leave<Scenes.SceneContext>()(ctx)
-    pipe(
-        ctx.from.id,
-        createAuthCode,
-        JSON.stringify,
-        publish,
-    )
-    return ctx.reply('Напиши код, который тебе отправил чвбот')
+authCW.enter(async (ctx) => {
+    if (ctx.from === undefined) {
+        await leave<Scenes.SceneContext>()(ctx)
+        return ctx.reply("Напиши это в личные сообщения")
+    } else if (await isRegistered(ctx.from.id)) {
+        await leave<Scenes.SceneContext>()(ctx)
+        return ctx.reply("Ты уже авторизован")
+    } else {
+        pipe(
+            ctx.from.id,
+            createAuthCode,
+            JSON.stringify,
+            publish,
+        )
+        return ctx.reply('Напиши код, который тебе отправил чвбот')
+    }
 })
 // authCW.leave((ctx) => ctx.reply('Процесс аутентификации закончен, но возможно что-то пошло не так'))
 authCW.hears(/(\d+)/, (ctx) => {
@@ -83,10 +90,16 @@ authCW.hears(/(\d+)/, (ctx) => {
         publish,
     )
     const subscription = messageObservable.subscribe(data => {
-        if (typeof data === "string" && isResultOk(data)) ctx.reply('Регистрация успешна!')
-        else ctx.reply('Произошла ошибка регистрации')
-        subscription.unsubscribe()
-        leave<Scenes.SceneContext>()(ctx)
+        if (typeof data === "string") {
+            const dataJSON = JSON.parse(data)
+            if (dataJSON.action === "grantToken" && dataJSON.payload.userId === ctx.from.id) {
+                if (isResultOk(data)) ctx.reply('Регистрация успешна!')
+                else ctx.reply('Произошла ошибка регистрации')
+                subscription.unsubscribe()
+                leave<Scenes.SceneContext>()(ctx)
+            }
+        }
+
     })
 
     return ctx.reply('Процесс аутентификации начат...')
@@ -165,6 +178,7 @@ bot.command('list', async (ctx) => {
 })
 
 bot.command('trade_start', async (ctx) => {
+    if (buyers.has(ctx.from.id)) return ctx.reply("Торговля и так была включена")
     const users = await getUsers()
     return pipe(
         users,
