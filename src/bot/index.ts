@@ -8,7 +8,6 @@ import * as O from "fp-ts/lib/Option"
 import {User} from "../db/types"
 import {
     addUser,
-    getToken,
     getUsers,
     isRegistered,
     readMaintenances, requestProfileUpdate,
