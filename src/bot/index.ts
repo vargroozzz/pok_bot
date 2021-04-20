@@ -229,7 +229,18 @@ bot.command('trade_stop', async (ctx) => {
 bot.command('active_traders', async (ctx) => ctx.reply(Array.from(buyers.keys()).join('\n')))
 
 // Enable graceful stop
-process.once('SIGINT', () => bot.stop('SIGINT'))
-process.once('SIGTERM', () => bot.stop('SIGTERM'))
-
+process.once('SIGINT', () => {
+    buyers.forEach(async ( _, buyer_id) => {
+        unsubscribe(buyer_id)
+        await bot.telegram.sendMessage(buyer_id, "Торговля выключена по техническим причинам,можешь включить заново, если автор бота не говорит обратное")
+    })
+    bot.stop('SIGINT')
+})
+process.once('SIGTERM', () => {
+    buyers.forEach(( _, buyer_id) => {
+        unsubscribe(buyer_id)
+        bot.telegram.sendMessage(buyer_id, "Торговля выключена по техническим причинам,можешь включить заново, если автор бота не говорит обратное")
+    })
+    bot.stop('SIGTERM')
+})
 export default bot
