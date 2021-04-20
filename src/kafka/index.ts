@@ -1,7 +1,7 @@
 import { Kafka } from 'kafkajs'
 import {sortByPriceByMana, storesToMaintenances} from "./maintenances"
 import { pipe } from "fp-ts/lib/function"
-import * as fs from "fs"
+import * as fs from "fs/promises"
 import {writeOfferJSON} from "./offers"
 import EventEmitter from "events"
 import {fromEvent} from "rxjs"
@@ -52,7 +52,7 @@ const runKafka = async () => {
                             storesToMaintenances,
                             sortByPriceByMana,
                             JSON.stringify,
-                            data => fs.writeFileSync(maintenancesFilePath, data),
+                            data => fs.writeFile(maintenancesFilePath, data),
                         )
                         break
                 }
